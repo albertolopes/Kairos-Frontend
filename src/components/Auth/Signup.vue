@@ -1,7 +1,7 @@
 <template>
     <v-container fill-height>
         <v-layout align-center justify-center>
-            <v-flex xs 12 sm 8 md4>
+            <v-flex xs 12 sm 8 md5>
                 <v-card class="elevation-12">
                     <v-toolbar dark color="blue">
                         <v-toolbar-title>
@@ -9,56 +9,72 @@
                         </v-toolbar-title>
                     </v-toolbar>
                     <v-card-text>
-                        <v-form>
-
-                            <v-alert
-                                :value="true"
-                                color="error"
-                            >
-                                This user alread exists.
-                            </v-alert>
-
                             <v-text-field
-                                name="login"
+                                name="nome"
                                 label="Login"
+                                v-model="nome"
                                 :rules="[rules.required]"
                             ></v-text-field>
 
                             <v-text-field
                                 name="email"
                                 label="Email"
+                                v-model="email"
                                 :rules="[rules.required, rules.email]"
                             ></v-text-field>
 
                             <v-text-field
-                                name="password"
+                                name="senha"
                                 label="Password"
                                 :rules="[rules.required]"
                                 type="password"
-                                v-model="password"
+                                v-model="senha"
                             ></v-text-field>
 
                               <v-text-field
-                                name="password"
+                                name="confirm_password"
                                 label="Confirm Password"
                                 :rules="[rules.required]"
                                 type="password"
                                 v-model="confirm_password"
                                 :error="!valid()"
                             ></v-text-field>
-                        </v-form>
+                        
                         <v-form>
                             <v-divider light></v-divider>
 
                             <v-card-actions>
-                                <v-btn color ="black" dark>Sign in</v-btn>
+                                <v-btn to="/login" color ="black" dark>Login</v-btn>
                                 <v-spacer></v-spacer>
-                                <v-btn color="success">
+                                <v-btn color="primary" dark @click.prevent="register()">
                                     Register
                                 </v-btn>
                             </v-card-actions>
                         </v-form>
                     </v-card-text>
+                        <v-snackbar 
+                            v-model="snackbar"
+                            :bottom="y === 'bottom'"
+                            :color="color"
+                            :left="x === 'left'"
+                            :multi-line="mode === 'multi-line'"
+                            :right="x === 'right'"
+                            :timeout="timeout"
+                            :top="y === 'top'"
+                            :vertical="mode === 'vertical'"
+                        >
+                            {{text}}  
+                            <template v-slot:action="{ attrs }">
+                                <v-btn
+                                    color="blue"
+                                    text
+                                    v-bind="attrs"
+                                    @click="snackbar = false"
+                                    >
+                                    Close
+                                </v-btn>
+                            </template>
+                        </v-snackbar>
                 </v-card>
             </v-flex>
         </v-layout>
@@ -71,6 +87,13 @@ export default {
     data: () =>({
         password:'',        
         confirm_password:'',
+        color: '',
+        mode: '',
+        snackbar: false,
+        text: '',
+        timeout: 6000,
+        x: null,
+        y: 'top',
 
         rules: {
             required: value => !!value || "Required",
@@ -81,8 +104,29 @@ export default {
         }
     }),
     methods: {
+        register() {
+            if (this.valid()) {
+                this.$store.dispatch('REGISTER', {
+                nome: this.nome,
+                email: this.email,
+                senha: this.senha
+                })
+                .then((status) => {
+                    if(status === 200){
+                        this.$router.push('login');
+                    }
+                })
+                error => {
+                this.snackbar = true;
+                this.text = error.response.data.message
+                    // (error.response && error.response.data) ||
+                    // error.message 
+                    // error.toString();
+                }
+            }
+    },
         valid() {
-            return this.password === this.confirm_password;
+            return this.senha === this.confirm_password;
         }
     }
 }

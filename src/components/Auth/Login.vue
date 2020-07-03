@@ -1,5 +1,5 @@
 <template>
-    <v-container>
+    <v-container fill-height>
         <v-layout align-center justify-center>
             <v-flex xs12 sm8 md4>
                 <v-form>
@@ -9,23 +9,54 @@
                                 Login
                             </v-toolbar-title>
                         </v-toolbar>
+                        <v-snackbar 
+                            v-model="snackbar"
+                            :bottom="y === 'bottom'"
+                            :color="color"
+                            :left="x === 'left'"
+                            :multi-line="mode === 'multi-line'"
+                            :right="x === 'right'"
+                            :timeout="timeout"
+                            :top="y === 'top'"
+                            :vertical="mode === 'vertical'"
+                        >
+                            {{text}}  
+                            <template v-slot:action="{ attrs }">
+                                <v-btn
+                                    color="blue"
+                                    text
+                                    v-bind="attrs"
+                                    @click="snackbar = false"
+                                    >
+                                    Close
+                                </v-btn>
+                            </template>
+                        </v-snackbar>
                         <v-card-text>
                             <v-text-field
-                                name="login"
-                                label="Login"
+                                name="usuario"
+                                label="Username"
                                 type="text"
+                                v-model="nome"
                             ></v-text-field>   
                             <v-text-field
-                                name="password"
+                                v-model="senha"
+                                name="senha"
                                 label="Password"
                                 type="password"
-                            ></v-text-field>    
+                            ></v-text-field>
+                            <div class="my-2">
+                                <v-btn  to="/forgot" text small color="primary"> Forgot it my password</v-btn>   
+                            </div>
                         </v-card-text>
                         <v-divider light></v-divider>
                         <v-card-actions>
-                            <v-btn round color="indigo" dark>Sign in</v-btn>
+                            <v-btn to="/signup" color="indigo" dark>Sign up</v-btn>
                             <v-spacer></v-spacer>
-                            <v-btn round color="primary" dark>
+                            <v-btn 
+                                color="primary" 
+                                dark
+                                @click.prevent="login()">
                                 Login
                             </v-btn>
                         </v-card-actions>
@@ -38,6 +69,35 @@
 
 <script>
 export default {
-    name: 'login'
+    name: 'login',
+    data: () =>({
+        nome: '',
+        senha: '',
+        color: '',
+        mode: '',
+        snackbar: false,
+        text: '',
+        timeout: 6000,
+        x: null,
+        y: 'top',
+    }),
+    methods: {
+        login() {
+            this.$store.dispatch("LOGIN",{
+                nome: this.nome,
+                senha: this.senha
+            })
+            .then(
+            () => {
+              this.$router.push('/user');
+            },
+            error => {
+              this.snackbar = true;
+              this.text = error.response.data.message
+            }
+          );
+                        
+        }
+    }
 }; 
 </script>
