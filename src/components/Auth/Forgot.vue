@@ -39,7 +39,7 @@
                                 color="teal"
                                 border="left"
                             >
-                                You will receve a new password in the email.
+                                You will receve a new password on your email.
                             </v-alert>                            
                             <v-text-field
                                 name="email"
@@ -80,7 +80,6 @@ export default {
     }),
     methods: {
         sendEmail(){
-            console.log(this.email)
             this.$store.dispatch("FORGOT",{
                 email: this.email
             })

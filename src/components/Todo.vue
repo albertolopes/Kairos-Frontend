@@ -5,6 +5,7 @@
       v-model="drawer"
       app
       left
+      fluid
     >
       <v-list dense>
 
@@ -21,11 +22,12 @@
         </v-list-item>
       </v-list>
       <template v-slot:append>
-        <div class="pa-2">
+        <div class="pa-9">
           <v-btn 
             block 
-            color="cyan"
+            color="deep-purple"
             @click.prevent="logout()"
+            dark
           >Logout</v-btn>
         </div>
       </template>
@@ -33,40 +35,26 @@
 
     <v-app-bar
       app
-      color="cyan"
+      color="deep-purple"
       dark
     >
     <v-app-bar-nav-icon @click.stop="drawer = !drawer">
-      <v-icon large>mdi-view-dashboard</v-icon>
+      <v-icon large>mdi-dots-horizontal</v-icon>
     </v-app-bar-nav-icon>
     <v-toolbar-title>Menage Time</v-toolbar-title>
       <v-spacer></v-spacer>
     </v-app-bar>
      <v-main>
       <v-container
-        class="fill-height"
         fluid
+        align="align-baseline"
+        justify="center"
       >
-        <v-row
-          align="center"
-          justify="center"
-        >
-          <v-col class="text-center">
-              <template>
-                <router-view></router-view>
-              </template>
-          </v-col>
-        </v-row>
+        <template>
+          <router-view></router-view>
+        </template>
       </v-container>
      </v-main>
-    <v-footer
-      color="cyan"
-      app
-    > 
-      <v-spacer></v-spacer>
-
-      <span class="white--text">&copy; 2019 - Alberto Lopes</span>
-    </v-footer>
   </v-app>
 </template>
 

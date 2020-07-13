@@ -1,13 +1,14 @@
 import Vue from "vue";
 import Vuex from "vuex"
 
-import User from './modules/auth.service'
+import Auth from './modules/auth.service'
+import Task from './modules/task.service'
 
 Vue.use(Vuex)
 
 export default new Vuex.Store({
     modules: {
-        user: User
-        
+        auth: Auth,
+        task: Task
     }
 })

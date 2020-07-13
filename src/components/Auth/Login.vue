@@ -4,7 +4,7 @@
             <v-flex xs12 sm8 md4>
                 <v-form>
                     <v-card class="elevation-12">
-                        <v-toolbar dark color="blue">
+                        <v-toolbar dark color="deep-purple">
                             <v-toolbar-title>
                                 Login
                             </v-toolbar-title>
@@ -23,7 +23,7 @@
                             {{text}}  
                             <template v-slot:action="{ attrs }">
                                 <v-btn
-                                    color="blue"
+                                    color="deep-purple"
                                     text
                                     v-bind="attrs"
                                     @click="snackbar = false"
@@ -34,29 +34,33 @@
                         </v-snackbar>
                         <v-card-text>
                             <v-text-field
-                                name="usuario"
-                                label="Username"
+                                :rules="[rules.required]"
+                                color="deep-purple"
+                                name="nome"
+                                label="Nome"
                                 type="text"
                                 v-model="nome"
                             ></v-text-field>   
                             <v-text-field
+                                :rules="[rules.required]"
+                                color="deep-purple"
                                 v-model="senha"
                                 name="senha"
-                                label="Password"
+                                label="Senha"
                                 type="password"
                             ></v-text-field>
                             <div class="my-2">
-                                <v-btn  to="/forgot" text small color="primary"> Forgot it my password</v-btn>   
+                                <v-btn  to="/forgot" text small color="deep-purple"> Forgot it my password</v-btn>   
                             </div>
                         </v-card-text>
                         <v-divider light></v-divider>
                         <v-card-actions>
-                            <v-btn to="/signup" color="indigo" dark>Sign up</v-btn>
+                            <v-btn text to="/signup" color="deep-purple">Sign up</v-btn>
                             <v-spacer></v-spacer>
                             <v-btn 
-                                color="primary" 
-                                dark
-                                @click.prevent="login()">
+                                class="white--text"
+                                color="deep-purple accent-4"
+                                @click="agreement = true, dialog = false, login()">
                                 Login
                             </v-btn>
                         </v-card-actions>
@@ -71,25 +75,27 @@
 export default {
     name: 'login',
     data: () =>({
-        nome: '',
-        senha: '',
-        color: '',
+        nome: undefined,
+        senha: undefined,
+        color: 'deep-purple',
         mode: '',
         snackbar: false,
         text: '',
         timeout: 6000,
         x: null,
         y: 'top',
-    }),
+        rules: {
+            required: value => !!value || "Required"           
+        }
+    }),    
     methods: {
         login() {
             this.$store.dispatch("LOGIN",{
                 nome: this.nome,
                 senha: this.senha
             })
-            .then(
-            () => {
-              this.$router.push('/user');
+            .then(() => {
+              this.$router.push('/init');
             },
             error => {
               this.snackbar = true;
