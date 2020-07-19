@@ -1,13 +1,13 @@
 <template>
-  <v-card class="overflow-hidden mx-auto">
-    <v-app-bar color="grey lighten" elevate-on-scroll dense dark>
-      <v-btn dark text @click="prev" icon>
+  <v-card class="overflow-hidden mx-auto" height="700" max-width="1000">
+    <v-bottom-navigation color="teal">
+      <v-btn icon @click="prev">
         <v-icon small>mdi-chevron-left</v-icon>
       </v-btn>
 
       <v-toolbar-title v-if="$refs.calendar">{{ $refs.calendar.title }}</v-toolbar-title>
 
-      <v-btn dark text @click="next" icon>
+      <v-btn icon @click="next">
         <v-icon small>mdi-chevron-right</v-icon>
       </v-btn>
 
@@ -36,12 +36,12 @@
         </v-list>
       </v-menu>
 
-      <v-btn text @click="setToday">Today</v-btn>
+      <v-btn @click="setToday">Today</v-btn>
 
-      <!-- BTN NOVA TAREFA -->
-      <v-dialog max-width="600" min-width="700" v-model="dialog">
+      <!-- NOVA TAREFA -->
+      <v-dialog v-model="dialog" persistent max-width="600px">
         <template v-slot:activator="{ on, attrs }">
-          <v-btn text @click="salvar = true" v-bind="attrs" v-on="on">Nova tarefa</v-btn>
+          <v-btn v-bind="attrs" v-on="on">Nova tarefa</v-btn>
         </template>
         <v-card>
           <v-card-title>
@@ -198,23 +198,16 @@
           </v-container>
           <v-card-actions>
             <v-spacer></v-spacer>
-            <v-sheet v-if="salvar">
-              <v-btn color="deep-purple" text @click="dialog = false, clear()">Cancelar</v-btn>
-              <v-btn color="deep-purple" text @click="dialog = false, postTarefa()">Salvar</v-btn>
-            </v-sheet>
-            <v-sheet v-else>
-              <v-btn color="deep-purple" text @click="dialog = false, clear()">Cancelar</v-btn>
-              <v-btn color="deep-purple" text @click="dialog = false, putTarefa()">Atualizar</v-btn>
-            </v-sheet>
+            <v-btn color="deep-purple" text @click="dialog = false">Close</v-btn>
+            <v-btn color="deep-purple" text @click="dialog = false, postTarefa()">Save</v-btn>
           </v-card-actions>
         </v-card>
       </v-dialog>
-    </v-app-bar>
+    </v-bottom-navigation>
 
     <!-- CALENDARIO -->
     <v-sheet height="645">
       <v-calendar
-        v-if="renderComponent"
         ref="calendar"
         v-model="focus"
         color="primary"
@@ -234,20 +227,20 @@
       >
         <v-card color="grey lighten-4" min-width="350px" flat>
           <v-toolbar :color="selectedEvent.color" dark>
-            <v-toolbar-title v-html="selectedEvent.name"></v-toolbar-title>
-            <v-spacer></v-spacer>
-            <v-btn @click="salvar = false, edit()" icon>
+            <v-btn icon>
               <v-icon>mdi-pencil</v-icon>
             </v-btn>
-            <v-btn @click="deleteDialog = true" icon>
-              <v-icon>mdi-delete</v-icon>
+            <v-toolbar-title v-html="selectedEvent.name"></v-toolbar-title>
+            <v-spacer></v-spacer>
+            <v-btn icon>
+              <v-icon>mdi-heart</v-icon>
             </v-btn>
             <v-btn icon>
               <v-icon>mdi-dots-vertical</v-icon>
             </v-btn>
           </v-toolbar>
           <v-card-text>
-            <span v-html="selectedEvent.description"></span>
+            <span v-html="selectedEvent.details"></span>
           </v-card-text>
           <v-card-actions>
             <v-btn text color="secondary" @click="selectedOpen = false">Cancel</v-btn>
@@ -255,36 +248,6 @@
         </v-card>
       </v-menu>
     </v-sheet>
-
-    <!-- DIALOG DELETE -->
-    <v-dialog v-model="deleteDialog" persistent max-width="290">
-      <v-card>
-        <v-card-title class="headline">Tem certeza que deseja excluir a tarefa selecionada?</v-card-title>
-        <v-card-actions>
-          <v-spacer></v-spacer>
-          <v-btn color="green darken-1" text @click="deleteDialog = false">cancelar</v-btn>
-          <v-btn color="green darken-1" text @click="deleteDialog = false, deletar()">deletar</v-btn>
-        </v-card-actions>
-      </v-card>
-    </v-dialog>
-
-    <!-- DIALOG DELETE -->
-    <v-snackbar
-      v-model="snackbar"
-      :bottom="y === 'bottom'"
-      :color="color"
-      :left="x === 'left'"
-      :multi-line="mode === 'multi-line'"
-      :right="x === 'right'"
-      :timeout="timeout"
-      :top="y === 'top'"
-      :vertical="mode === 'vertical'"
-    >
-      {{text}}
-      <template v-slot:action="{ attrs }">
-        <v-btn color="write" text v-bind="attrs" @click="snackbar = false">Fechar</v-btn>
-      </template>
-    </v-snackbar>
   </v-card>
 </template>
 
@@ -292,19 +255,9 @@
 export default {
   name: "tasks",
   data: () => ({
-    renderComponent: true,
-    color: "grey lighten",
-    mode: "",
-    snackbar: false,
-    text: "",
-    timeout: 6000,
-    x: null,
-    y: "top",
-    salvar: true,
     dialog: false,
-    deleteDialog: false,
-    data1: undefined,
-    data2: undefined,
+    data1: null,
+    data2: null,
     menu1: false,
     menu2: false,
     horaInicial: undefined,
@@ -314,8 +267,6 @@ export default {
     status: "CONCLUIDA",
     descricao: undefined,
     tipoTarefa: undefined,
-    usuario: undefined,
-    id: undefined,
     focus: "",
     type: "month",
     typeToLabel: {
@@ -329,19 +280,19 @@ export default {
     selectedOpen: false,
     events: [],
     colors: [
-      // "blue",
-      // "indigo",
-      // "deep-purple",
-      // "cyan",
-      // "green",
-      // "orange",
+      "blue",
+      "indigo",
+      "deep-purple",
+      "cyan",
+      "green",
+      "orange",
       "grey darken-1"
     ],
     titleRules: [v => !!v || "Titulo é obrigatorio"],
     dataInicialRules: [v => !!v || "Data inicial é obrigatória"],
     horaInicialRules: [v => !!v || "Hora inicial é obrigatória"]
   }),
-  computed: {    
+  computed: {
     dataInicial() {
       return this.data1;
     },
@@ -358,80 +309,14 @@ export default {
     this.$refs.calendar.checkChange();
   },
   methods: {
-    forceRerender() {
-      this.renderComponent = false;
-      this.$nextTick(() => {
-        this.renderComponent = true;
-      });
-    },
     postTarefa() {
-      this.$store
-        .dispatch("POST_TASK", {
-          status: this.status,
-          descricao: this.descricao,
-          tipoTarefa: this.tipoTarefa,
-          tempoInicial: this.dataInicial + "T" + this.horaInicial + ":00Z",
-          tempoFinal: this.dataFinal
-            ? ""
-            : this.dataFinal + "T" + (this.horaFinal == "")
-            ? ""
-            : this.horaFinal + ":00Z"
-        })
-        .then(
-          response => {
-            if (response == 201) {
-              this.snackbar = true;
-              this.text = "Tarefa criada com sucesso!";
-            }
-            this.forceRerender();
-          },
-          error => {
-            this.snackbar = true;
-            this.text = error.response.data.message;
-          }
-        );
-    },
-    putTarefa() {
-      this.$store
-        .dispatch("PUT_TASK", {
-          id: this.selectedEvent.id,
-          status: this.status,
-          descricao: this.descricao,
-          tipoTarefa: this.tipoTarefa,
-          tempoInicial: this.dataInicial + "T" + this.horaInicial + ":00Z",
-          tempoFinal: this.dataFinal
-            ? ""
-            : this.dataFinal + "T" + (this.horaFinal == "")
-            ? ""
-            : this.horaFinal + ":00Z"
-        })
-        .then(() => {
-          this.forceRerender();
-        });
-    },
-    edit() {
-      this.dialog = true;
-      this.tipoTarefa = this.selectedEvent.name;
-      this.descricao = this.selectedEvent.description;
-      this.data1 = this.selectedEvent.start.toISOString().substring(0, 10);
-      this.horaInicial = this.selectedEvent.start.toISOString().substring(11, 16);
-      this.data2 = this.selectedEvent.end.toISOString().substring(0, 10);
-      this.horaFinal = this.selectedEvent.end.toISOString().substring(11, 16);
-    },
-    deletar() {
-      this.$store
-        .dispatch("DELETE_TASK", { id: this.selectedEvent.id })
-        .then(() => {
-          this.forceRerender();
-        });
-    },
-    clear() {
-      this.tipoTarefa = "";
-      this.descricao = "";
-      this.data1 = "";
-      this.data2 = "";
-      this.horaInicial = "";
-      this.horaFinal = "";
+      this.$store.dispatch("POST_TASK", {
+        status: this.status,
+        descricao: this.descricao,
+        tipoTarefa: this.tipoTarefa,
+        tempoInicial: this.dataInicial + "T" + this.horaInicial + ":00Z",
+        tempoFinal: this.dataFinal + "T" + this.horaFinal + ":00Z"
+      });
     },
     formatDate(date) {
       if (!date) return null;
@@ -477,16 +362,10 @@ export default {
         for (let i = 0; i < response.data.length; i++) {
           const allDay = this.rnd(0, 3) === 0;
           const first = new Date(response.data[i].tempoInicial);
-          const second =
-            response.data[i].tempoFinal === null
-              ? null
-              : new Date(response.data[i].tempoFinal);
+          const second = new Date(response.data[i].tempoFinal);
 
           events.push({
-            id: response.data[i].id,
-            name: response.data[i].tipoTarefa,
-            description: response.data[i].descricao,
-            usuario: response.data[i].usuario,
+            name: response.data[i].descricao,
             start: first,
             end: second,
             color: this.colors[this.rnd(0, this.colors.length - 1)],
