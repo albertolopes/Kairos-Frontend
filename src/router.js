@@ -38,7 +38,7 @@ const router = new Router({
           },
           {
             path: '/about',
-            component: { about: About },
+            component: About,
             name: 'about'
           }
         ]

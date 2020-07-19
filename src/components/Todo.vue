@@ -41,7 +41,7 @@
     <v-app-bar-nav-icon @click.stop="drawer = !drawer">
       <v-icon large>mdi-dots-horizontal</v-icon>
     </v-app-bar-nav-icon>
-    <v-toolbar-title>Menage Time</v-toolbar-title>
+    <v-toolbar-title>Kairos</v-toolbar-title>
       <v-spacer></v-spacer>
     </v-app-bar>
      <v-main>
@@ -68,11 +68,6 @@
       drawer: null,
       items: [
         {
-          icon: 'mdi-view-dashboard',
-          title: 'Inicio', 
-          to: '/',
-        },
-        {
           title: 'Tarefas ',
           icon: 'mdi-clipboard-outline',
           to: 'tasks'
@@ -83,9 +78,9 @@
           to: '/user',
         },
         {
-          title: 'Notificações',
-          icon: 'mdi-bell',
-          to: '/components/notifications',
+          title: 'Sobre o aplicativo',
+          icon: 'mdi-account',
+          to: '/about',
         },
       ],
     }),

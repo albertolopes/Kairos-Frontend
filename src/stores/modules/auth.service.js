@@ -54,20 +54,19 @@ export default{
       });
     },
     
-    REGISTER: ({ commit }, { nome, email, senha }) => {
-      commit('loginRequest', { nome, email, senha });
-      axios.post(`usuarios`, {
-          nome, 
-          email, 
-          senha
+    REGISTER: ({ commit }, payload) => {    
+      return axios.post(API_URL + 'usuarios', {
+        nome: payload.nome, 
+        email: payload.email, 
+        senha: payload.senha
       })
-      .then((status, response) => {
-          if(status === 200){
-            return response.data;
-          }                
+      .then(response => {        
+        if (response) {          
+          commit(response);          
+        }
+        return Promise.resolve(response);
       });
     },
-
     REFRESH_TOKEN: () => {
       return new Promise((resolve, reject) => {
         axios
