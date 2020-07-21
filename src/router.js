@@ -13,7 +13,9 @@ import About from './components/About';
 
 Vue.use(Router);
 
-const router = new Router({  
+const router = new Router({ 
+  mode: 'history',
+  base: process.env.BASE_URL, 
   routes: [
     {
       path: '/',
@@ -38,7 +40,7 @@ const router = new Router({
           },
           {
             path: '/about',
-            component: { about: About },
+            component: About,
             name: 'about'
           }
         ]
