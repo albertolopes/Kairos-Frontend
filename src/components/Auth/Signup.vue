@@ -47,7 +47,12 @@
               <v-card-actions>
                 <v-btn to="/login" color="deep-purple" text>Voltar</v-btn>
                 <v-spacer></v-spacer>
-                <v-btn color="deep-purple" dark @click.prevent="register()">Registrar</v-btn>
+                <v-btn
+                  :disabled="!isComplete"
+                  class="white--text"
+                  color="deep-purple"
+                  @click.prevent="register()"
+                >Registrar</v-btn>
               </v-card-actions>
             </v-form>
           </v-card-text>
@@ -97,6 +102,11 @@ export default {
       }
     }
   }),
+  computed: {
+    isComplete() {
+      return this.nome && this.email && this.senha && this.confirm_password;
+    }
+  },
   methods: {
     register() {
       if (this.valid()) {
@@ -106,7 +116,8 @@ export default {
             email: this.email,
             senha: this.senha
           })
-          .then((response) => {
+          .then(
+            response => {
               this.text = response.data.message;
             },
             error => {

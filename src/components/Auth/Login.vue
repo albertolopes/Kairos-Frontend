@@ -49,6 +49,7 @@
               <v-btn text small to="/signup" color="deep-purple">Cadastre-se</v-btn>
               <v-spacer></v-spacer>
               <v-btn
+                :disabled="!isComplete"
                 class="white--text"
                 color="deep-purple"
                 @click="agreement = true, dialog = false, login()"
@@ -58,7 +59,7 @@
         </v-form>
       </v-flex>
     </v-layout>
-  </v-container>  
+  </v-container>
 </template>
 
 <script>
@@ -67,7 +68,7 @@ export default {
   data: () => ({
     nome: undefined,
     senha: undefined,
-    color:"grey lighten",
+    color: "grey lighten",
     mode: "",
     snackbar: false,
     text: "",
@@ -78,6 +79,11 @@ export default {
       required: value => !!value || "Required"
     }
   }),
+  computed: {
+    isComplete() {
+      return this.nome && this.senha;
+    }
+  },
   methods: {
     login() {
       this.$store
@@ -87,7 +93,7 @@ export default {
         })
         .then(
           () => {
-           this.$router.go(this.$router.replace("/tasks"))  ;
+            this.$router.go(this.$router.replace("/tasks"));
           },
           error => {
             this.snackbar = true;

@@ -1,4 +1,3 @@
-  
 <template>
   <v-app id="inspire">
     <v-navigation-drawer
@@ -41,7 +40,7 @@
     <v-app-bar-nav-icon @click.stop="drawer = !drawer">
       <v-icon large>mdi-dots-horizontal</v-icon>
     </v-app-bar-nav-icon>
-    <v-toolbar-title>Menage Time</v-toolbar-title>
+    <v-toolbar-title>KAIRÓS</v-toolbar-title>
       <v-spacer></v-spacer>
     </v-app-bar>
      <v-main>

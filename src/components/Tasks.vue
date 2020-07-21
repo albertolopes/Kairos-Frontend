@@ -203,11 +203,21 @@
             <v-spacer></v-spacer>
             <v-sheet v-if="salvar">
               <v-btn color="deep-purple" text @click="dialog = false, clear()">Cancelar</v-btn>
-              <v-btn color="deep-purple" text @click="dialog = false, postTarefa()">Salvar</v-btn>
+              <v-btn
+                :disabled="!isComplete"
+                color="deep-purple"
+                text
+                @click="dialog = false, postTarefa()"
+              >Salvar</v-btn>
             </v-sheet>
             <v-sheet v-else>
               <v-btn color="deep-purple" text @click="dialog = false, clear()">Cancelar</v-btn>
-              <v-btn color="deep-purple" text @click="dialog = false, putTarefa()">Atualizar</v-btn>
+              <v-btn
+                :disabled="!isComplete"
+                color="deep-purple"
+                text
+                @click="dialog = false, putTarefa()"
+              >Atualizar</v-btn>
             </v-sheet>
           </v-card-actions>
         </v-card>
@@ -349,6 +359,9 @@ export default {
     horaInicialRules: [v => !!v || "Hora inicial é obrigatória"]
   }),
   computed: {
+    isComplete() {
+      return this.tipoTarefa && this.horaInicial && this.data1;
+    },
     dataInicial() {
       return this.data1;
     },
@@ -376,8 +389,10 @@ export default {
             ? ""
             : this.horaFinal + ":00Z"
         })
-        .then(() => {
-            this.forceRerender();        
+        .then(response => {
+          if (response) {
+            this.forceRerender();
+          }
         });
     },
     putTarefa() {
