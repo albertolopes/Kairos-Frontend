@@ -18,8 +18,8 @@ export default {
         taskSuccess(state, data) {
             state.data = data;
         },
-        taskFailure(state) {
-            state.data = null;
+        taskFailure(state, data) {
+            state.data = data;
         }
     },
 
@@ -48,7 +48,7 @@ export default {
                 });
         },
         PUT_TASK: ({ commit }, payload) => {
-            axios.put(API_URL + 'tarefas', {
+            return axios.put(API_URL + 'tarefas', {
                 id: payload.id,
                 status: payload.status,
                 tipoTarefa: payload.tipoTarefa,
@@ -65,11 +65,9 @@ export default {
         },
         DELETE_TASK: ({ commit }, payload) => {
             console.log(payload.id)
-            axios.delete(API_URL + 'tarefas/' + payload.id, config)
+            return axios.delete(API_URL + 'tarefas/' + payload.id, config)
                 .then(response => {
-                    if (response) {
-                        commit('taskFailure', response.data);
-                    }
+                    commit('taskSuccess', response);
                     return Promise.resolve(response);
                 });
         }

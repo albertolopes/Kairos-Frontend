@@ -228,7 +228,6 @@
     <v-sheet height="645">
       <v-calendar
         locale="pt-br"
-        v-if="renderComponent"
         ref="calendar"
         v-model="focus"
         color="primary"
@@ -239,6 +238,7 @@
         @click:more="viewDay"
         @click:date="viewDay"
         @change="updateRange"
+        v-if="renderComponent"
       ></v-calendar>
       <v-menu
         v-model="selectedOpen"
@@ -310,7 +310,7 @@ export default {
   name: "tasks",
   data: () => ({
     renderComponent: true,
-    color: "grey lighten",
+    color: "deep-purple",
     mode: "",
     snackbar: false,
     text: "",
@@ -390,9 +390,11 @@ export default {
             : this.horaFinal + ":00Z"
         })
         .then(response => {
-          if (response) {
-            this.forceRerender();
-          }
+          if(response){
+            this.snackbar = true,
+            this.text = "Tarefa " + response.tipoTarefa + " foi criada.",
+            this.forceRerender(); 
+          }   
         });
     },
     putTarefa() {
@@ -409,8 +411,12 @@ export default {
             ? ""
             : this.horaFinal + ":00Z"
         })
-        .then(() => {
-          this.forceRerender();
+        .then(response => {
+          if(response){
+            this.snackbar = true,
+            this.text = "Tarefa " + response.tipoTarefa + " foi atualizada.",
+            this.forceRerender(); 
+          }   
         });
     },
     edit() {
@@ -427,8 +433,12 @@ export default {
     deletar() {
       this.$store
         .dispatch("DELETE_TASK", { id: this.selectedEvent.id })
-        .then(() => {
-          this.forceRerender();
+        .then(response => {
+          if(response.status == 204){
+            this.snackbar = true,
+            this.text = "Tarefa excluida com sucesso.",
+            this.forceRerender(); 
+          }   
         });
     },
     clear() {
