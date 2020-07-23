@@ -65,7 +65,7 @@
                   v-model="descricao"
                   auto-grow
                   name="descricao"
-                  label="Descrição da tarefa"
+                  label="Descrição da tarefa (Opcional)"
                   color="deep-purple"
                   rows="1"
                 ></v-textarea>
@@ -89,7 +89,7 @@
                       :rules="dataInicialRules"
                       v-model="dataInicial"
                       color="deep-purple"
-                      label="Date"
+                      label="Data inicial"
                       hint="MM/DD/YYYY format"
                       persistent-hint
                       v-bind="attrs"
@@ -118,7 +118,7 @@
                     <v-text-field
                       v-model="dataFinal"
                       color="deep-purple"
-                      label="Date (read only text field)"
+                      label="Data final (Opcional)"
                       hint="MM/DD/YYYY format"
                       v-bind="attrs"
                       v-on="on"
@@ -225,7 +225,7 @@
     </v-app-bar>
 
     <!-- CALENDARIO -->
-    <v-sheet height="645">
+    <v-sheet height="600">
       <v-calendar
         locale="pt-br"
         ref="calendar"
@@ -308,6 +308,9 @@
 <script>
 export default {
   name: "tasks",
+  mounted () {
+      console.log(this.$vuetify.breakpoint)
+  },
   data: () => ({
     renderComponent: true,
     color: "deep-purple",
@@ -339,7 +342,7 @@ export default {
       month: "Month",
       week: "Week",
       day: "Day",
-      "4day": "4 Days"
+      "4day": "4 Days",
     },
     selectedEvent: {},
     selectedElement: null,
@@ -352,11 +355,11 @@ export default {
       // "cyan",
       // "green",
       // "orange",
-      "grey darken-1"
+      "grey darken-1",
     ],
-    titleRules: [v => !!v || "Titulo é obrigatorio"],
-    dataInicialRules: [v => !!v || "Data inicial é obrigatória"],
-    horaInicialRules: [v => !!v || "Hora inicial é obrigatória"]
+    titleRules: [(v) => !!v || "Titulo é obrigatorio"],
+    dataInicialRules: [(v) => !!v || "Data inicial é obrigatória"],
+    horaInicialRules: [(v) => !!v || "Hora inicial é obrigatória"],
   }),
   computed: {
     isComplete() {
@@ -367,8 +370,16 @@ export default {
     },
     dataFinal() {
       return this.data2;
-    }
+    },
+    computedDateFormatted() {
+      return this.formatDate(this.date1);
+    },
   },
+  watch: {
+      date1 () {
+        this.dateFormatted = this.formatDate(this.date1)
+      },
+    },
   methods: {
     forceRerender() {
       this.renderComponent = false;
@@ -383,18 +394,14 @@ export default {
           tipoTarefa: this.tipoTarefa,
           descricao: this.descricao,
           tempoInicial: this.dataInicial + "T" + this.horaInicial + ":00Z",
-          tempoFinal: this.dataFinal
-            ? ""
-            : this.dataFinal + "T" + (this.horaFinal == "")
-            ? ""
-            : this.horaFinal + ":00Z"
+          tempoFinal: this.authenticateFinal()
         })
-        .then(response => {
-          if(response){
-            this.snackbar = true,
-            this.text = "Tarefa " + response.tipoTarefa + " foi criada.",
-            this.forceRerender(); 
-          }   
+        .then((response) => {
+          if (response) {
+            (this.snackbar = true),
+              (this.text = "Tarefa " + response.tipoTarefa + " foi criada."),
+              this.forceRerender();
+          }
         });
     },
     putTarefa() {
@@ -405,40 +412,35 @@ export default {
           tipoTarefa: this.tipoTarefa,
           descricao: this.descricao,
           tempoInicial: this.dataInicial + "T" + this.horaInicial + ":00Z",
-          tempoFinal: this.dataFinal
-            ? ""
-            : this.dataFinal + "T" + (this.horaFinal == "")
-            ? ""
-            : this.horaFinal + ":00Z"
+          tempoFinal: this.authenticateFinal()
         })
-        .then(response => {
-          if(response){
-            this.snackbar = true,
-            this.text = "Tarefa " + response.tipoTarefa + " foi atualizada.",
-            this.forceRerender(); 
-          }   
+        .then((response) => {
+          if (response) {
+            (this.snackbar = true),
+              (this.text =
+                "Tarefa " + response.tipoTarefa + " foi atualizada."),
+              this.forceRerender();
+          }
         });
     },
     edit() {
       this.dialog = true;
       this.tipoTarefa = this.selectedEvent.name;
       this.descricao = this.selectedEvent.description;
-      this.data1 = this.selectedEvent.start.toISOString().substring(0, 10);
-      this.horaInicial = this.selectedEvent.start
-        .toISOString()
-        .substring(11, 16);
-      this.data2 = this.selectedEvent.end.toISOString().substring(0, 10);
-      this.horaFinal = this.selectedEvent.end.toISOString().substring(11, 16);
+      this.data1 = this.createDate(this.selectedEvent.start);
+      this.horaInicial = this.createHour(this.selectedEvent.start);
+      this.data2 = this.selectedEvent.end != null ? this.createDate(this.selectedEvent.end) : "";      
+      this.horaFinal = this.selectedEvent.end != null ? this.createHour(this.selectedEvent.end): "";
     },
     deletar() {
       this.$store
         .dispatch("DELETE_TASK", { id: this.selectedEvent.id })
-        .then(response => {
-          if(response.status == 204){
-            this.snackbar = true,
-            this.text = "Tarefa excluida com sucesso.",
-            this.forceRerender(); 
-          }   
+        .then((response) => {
+          if (response.status == 204) {
+            (this.snackbar = true),
+              (this.text = "Tarefa excluida com sucesso."),
+              this.forceRerender();
+          }
         });
     },
     clear() {
@@ -451,8 +453,15 @@ export default {
     },
     formatDate(date) {
       if (!date) return null;
+
       const [year, month, day] = date.split("-");
       return `${month}/${day}/${year}`;
+    },
+    parseDate(date) {
+      if (!date) return null;
+
+      const [month, day, year] = date.split("/");
+      return `${year}-${month.padStart(2, "0")}-${day.padStart(2, "0")}`;
     },
     viewDay({ date }) {
       this.focus = date;
@@ -484,16 +493,48 @@ export default {
       }
       nativeEvent.stopPropagation();
     },
+    authenticateFinal(){
+      if (this.dataFinal && this.horaFinal != ''){
+        return this.dataFinal + "T" + this.horaFinal + ":00Z"
+      } 
+      else if (this.dataFinal == null && this.horaFinal){
+        return this.dataInicial + "T" + this.horaFinal + ":00Z"
+      } 
+      else if(this.dataFinal && this.horaFinal == ''){
+        return this.dataFinal + "T" + this.horaInicial + ":00Z"
+      } 
+      else if(this.dataFinal && this.horaFinal){
+        return null;
+      }
+    },
+    createDate(date) {
+      let dateFormat = date.getFullYear() + "-" +
+        (date.getMonth() <= 9 ? "0" + (date.getMonth() + 1) : date.getMonth()) + "-" +
+        (date.getDate() <= 9 ? "0" + date.getDate() : date.getDate());
+      return dateFormat;
+    },
+    createHour(hour){
+      let hourFormat = hour.getHours() + ":" + (hour.getMinutes() == 0 ? "00" :hour.getMinutes())        
+      return hourFormat
+    },
+    timeZone(date) {
+      let dateWithTimeZone = new Date(date);
+      let dateWithoutTimeZone = new Date(
+        dateWithTimeZone.valueOf() + 
+        dateWithTimeZone.getTimezoneOffset() * 60000
+      );
+      return dateWithoutTimeZone;
+    },
     updateRange() {
-      this.$store.dispatch("GET_TASKS").then(response => {
+      this.$store.dispatch("GET_TASKS").then((response) => {
         const events = [];
         for (let i = 0; i < response.data.length; i++) {
           const allDay = true;
-          const first = new Date(response.data[i].tempoInicial);
+          const first = this.timeZone(response.data[i].tempoInicial);
           const second =
             response.data[i].tempoFinal === null
               ? null
-              : new Date(response.data[i].tempoFinal);
+              : this.timeZone(response.data[i].tempoFinal);
           events.push({
             id: response.data[i].id,
             name: response.data[i].tipoTarefa,
@@ -502,7 +543,7 @@ export default {
             start: first,
             end: second,
             color: this.colors[this.rnd(0, this.colors.length - 1)],
-            timed: allDay
+            timed: allDay,
           });
         }
         this.events = events;
@@ -510,7 +551,7 @@ export default {
     },
     rnd(a, b) {
       return Math.floor((b - a + 1) * Math.random()) + a;
-    }
-  }
+    },
+  },
 };
 </script>

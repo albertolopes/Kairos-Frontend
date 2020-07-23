@@ -1,8 +1,8 @@
 import axios from 'axios';
 
-const API_URL = 'https://menage-time.herokuapp.com/';
+// const API_URL = 'https://menage-time.herokuapp.com/';
 
-// const API_URL = 'http://localhost:9000/'
+const API_URL = 'http://localhost:9000/'
 
 let config = {
     headers: {
@@ -32,6 +32,7 @@ export default {
                 });
         },
         POST_TASK: ({ commit }, payload) => {
+            console.log(payload)
             return axios
                 .post(API_URL + 'tarefas', {
                     status: payload.status,
@@ -48,6 +49,7 @@ export default {
                 });
         },
         PUT_TASK: ({ commit }, payload) => {
+            console.log(payload)
             return axios.put(API_URL + 'tarefas', {
                 id: payload.id,
                 status: payload.status,
