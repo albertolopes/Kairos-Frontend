@@ -13,11 +13,12 @@
 
       <v-spacer></v-spacer>
 
+      <v-btn text small @click="setToday">Hoje</v-btn>
+
       <v-menu bottom right>
         <template v-slot:activator="{ on, attrs }">
-          <v-btn text v-bind="attrs" v-on="on">
-            <span>{{ typeToLabel[type] }}</span>
-            <v-icon right>mdi-menu-down</v-icon>
+          <v-btn class="ma-2" small fab color="teal" v-bind="attrs" v-on="on">
+            <v-icon>mdi-format-list-bulleted-square</v-icon>
           </v-btn>
         </template>
         <v-list>
@@ -36,12 +37,21 @@
         </v-list>
       </v-menu>
 
-      <v-btn text @click="setToday">Today</v-btn>
-
       <!-- BTN NOVA TAREFA -->
       <v-dialog max-width="600" min-width="700" v-model="dialog">
         <template v-slot:activator="{ on, attrs }">
-          <v-btn text @click="salvar = true, clear()" v-bind="attrs" v-on="on">Nova tarefa</v-btn>
+          <v-btn
+            class="mx-2"
+            fab
+            dark
+            small 
+            color="indigo"
+            @click="salvar = true, clear()"
+            v-bind="attrs"
+            v-on="on"
+          >
+            <v-icon dark>mdi-plus</v-icon>
+          </v-btn>
         </template>
         <v-card>
           <v-card-title>
@@ -308,9 +318,6 @@
 <script>
 export default {
   name: "tasks",
-  mounted () {
-      console.log(this.$vuetify.breakpoint)
-  },
   data: () => ({
     renderComponent: true,
     color: "deep-purple",
@@ -376,10 +383,10 @@ export default {
     },
   },
   watch: {
-      date1 () {
-        this.dateFormatted = this.formatDate(this.date1)
-      },
+    date1() {
+      this.dateFormatted = this.formatDate(this.date1);
     },
+  },
   methods: {
     forceRerender() {
       this.renderComponent = false;
@@ -394,7 +401,7 @@ export default {
           tipoTarefa: this.tipoTarefa,
           descricao: this.descricao,
           tempoInicial: this.dataInicial + "T" + this.horaInicial + ":00Z",
-          tempoFinal: this.authenticateFinal()
+          tempoFinal: this.authenticateFinal(),
         })
         .then((response) => {
           if (response) {
@@ -412,7 +419,7 @@ export default {
           tipoTarefa: this.tipoTarefa,
           descricao: this.descricao,
           tempoInicial: this.dataInicial + "T" + this.horaInicial + ":00Z",
-          tempoFinal: this.authenticateFinal()
+          tempoFinal: this.authenticateFinal(),
         })
         .then((response) => {
           if (response) {
@@ -429,8 +436,14 @@ export default {
       this.descricao = this.selectedEvent.description;
       this.data1 = this.createDate(this.selectedEvent.start);
       this.horaInicial = this.createHour(this.selectedEvent.start);
-      this.data2 = this.selectedEvent.end != null ? this.createDate(this.selectedEvent.end) : "";      
-      this.horaFinal = this.selectedEvent.end != null ? this.createHour(this.selectedEvent.end): "";
+      this.data2 =
+        this.selectedEvent.end != null
+          ? this.createDate(this.selectedEvent.end)
+          : "";
+      this.horaFinal =
+        this.selectedEvent.end != null
+          ? this.createHour(this.selectedEvent.end)
+          : "";
     },
     deletar() {
       this.$store
@@ -493,35 +506,38 @@ export default {
       }
       nativeEvent.stopPropagation();
     },
-    authenticateFinal(){
-      if (this.dataFinal && this.horaFinal != ''){
-        return this.dataFinal + "T" + this.horaFinal + ":00Z"
-      } 
-      else if (this.dataFinal == null && this.horaFinal){
-        return this.dataInicial + "T" + this.horaFinal + ":00Z"
-      } 
-      else if(this.dataFinal && this.horaFinal == ''){
-        return this.dataFinal + "T" + this.horaInicial + ":00Z"
-      } 
-      else if(this.dataFinal && this.horaFinal){
+    authenticateFinal() {
+      if (this.dataFinal && this.horaFinal != "") {
+        return this.dataFinal + "T" + this.horaFinal + ":00Z";
+      } else if (this.dataFinal == null && this.horaFinal) {
+        return this.dataInicial + "T" + this.horaFinal + ":00Z";
+      } else if (this.dataFinal && this.horaFinal == "") {
+        return this.dataFinal + "T" + this.horaInicial + ":00Z";
+      } else if (this.dataFinal && this.horaFinal) {
         return null;
       }
     },
     createDate(date) {
-      let dateFormat = date.getFullYear() + "-" +
-        (date.getMonth() <= 9 ? "0" + (date.getMonth() + 1) : date.getMonth()) + "-" +
+      let dateFormat =
+        date.getFullYear() +
+        "-" +
+        (date.getMonth() <= 9 ? "0" + (date.getMonth() + 1) : date.getMonth()) +
+        "-" +
         (date.getDate() <= 9 ? "0" + date.getDate() : date.getDate());
       return dateFormat;
     },
-    createHour(hour){
-      let hourFormat = hour.getHours() + ":" + (hour.getMinutes() == 0 ? "00" :hour.getMinutes())        
-      return hourFormat
+    createHour(hour) {
+      let hourFormat =
+        hour.getHours() +
+        ":" +
+        (hour.getMinutes() == 0 ? "00" : hour.getMinutes());
+      return hourFormat;
     },
     timeZone(date) {
       let dateWithTimeZone = new Date(date);
       let dateWithoutTimeZone = new Date(
-        dateWithTimeZone.valueOf() + 
-        dateWithTimeZone.getTimezoneOffset() * 60000
+        dateWithTimeZone.valueOf() +
+          dateWithTimeZone.getTimezoneOffset() * 60000
       );
       return dateWithoutTimeZone;
     },

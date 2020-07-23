@@ -1,8 +1,8 @@
 import axios from 'axios';
 
-// const API_URL = 'https://menage-time.herokuapp.com/';
+const API_URL = 'https://menage-time.herokuapp.com/';
 
-const API_URL = 'http://localhost:9000/'
+// const API_URL = 'http://localhost:9000/'
 
 export default{
   mutations: {
