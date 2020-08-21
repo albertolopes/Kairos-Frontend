@@ -74,7 +74,7 @@
         {
           title: 'Tarefas ',
           icon: 'mdi-clipboard-outline',
-          to: 'tasks'
+          to: '/tasks'
         },
         {
           icon: 'mdi-account',
@@ -93,7 +93,7 @@
            this.$store.dispatch("LOGOUT",{})
            .then(
             () => {
-              this.$router.push('/');
+              this.$router.push('login');
             },
             error => {
               this.snackbar = true;
