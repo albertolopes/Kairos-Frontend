@@ -17,7 +17,7 @@
 
       <v-menu bottom right>
         <template v-slot:activator="{ on, attrs }">
-          <v-btn class="ma-2" small fab color="teal" v-bind="attrs" v-on="on">
+          <v-btn class="ma-2" small fab color="deep-purple" v-bind="attrs" v-on="on">
             <v-icon>mdi-format-list-bulleted-square</v-icon>
           </v-btn>
         </template>
@@ -380,12 +380,16 @@ export default {
     },
     computedDateFormatted() {
       return this.formatDate(this.date1);
-    },
+    }
   },
   watch: {
+
     date1() {
       this.dateFormatted = this.formatDate(this.date1);
     },
+  },
+  beforeMount(){
+    this.forceRerender();
   },
   methods: {
     forceRerender() {

@@ -93,7 +93,8 @@ export default {
         })
         .then(
           () => {
-            this.$router.go(this.$router.replace("tasks"));
+            this.$router.replace("/tasks")
+            this.$router.go();            
           },
           error => {
             this.snackbar = true;
