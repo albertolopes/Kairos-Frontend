@@ -21,7 +21,8 @@ export default {
                     return Promise.resolve(response);
                 });
         },
-        POST_USER: ({ commit }, payload) => {
+        POST_USER: (payload) => {
+            console.log(payload);
             return axios
                 .post(API_URL + 'usuario', {
                     status: payload.status,
@@ -31,9 +32,6 @@ export default {
                     tempoFinal: payload.tempoFinal,
                 }, config)
                 .then(response => {
-                    if (response) {
-                        commit(response);
-                    }
                     return Promise.resolve(response);
                 });
         },

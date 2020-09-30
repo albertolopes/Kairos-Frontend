@@ -2,8 +2,6 @@ import axios from 'axios';
 
 const API_URL = 'https://menage-time.herokuapp.com/';
 
-// const API_URL = 'http://localhost:9000/'
-
 export default{
   mutations: {
       loginRequest(state, user) {
@@ -21,7 +19,11 @@ export default{
       logout(state) {
           state.status = {};
           state.user = null;
-      }
+      },
+      createUserSuccess(state, user) {
+        state.status = { loggedIn: true };
+        state.user = user;
+      },
   },
 
   actions: {
@@ -48,24 +50,25 @@ export default{
     FORGOT: ({ commit },payload) => {
       commit('loginRequest', payload);
       return axios
-      .post(`/auth/forgot`, payload)
+      .post(`auth/forgot`, payload)
       .then(response => {
         return response.data;
       });
     },
     
     REGISTER: ({ commit }, payload) => {    
-      return axios.post(API_URL + 'usuarios', {
+      return axios
+      .post(API_URL + 'usuarios', {
         nome: payload.nome, 
         email: payload.email, 
         senha: payload.senha
       })
-      .then(response => {        
-        if (response) {          
-          commit(response);          
+      .then(response => {
+        if (response) {
+            commit('createUserSuccess', response);
         }
         return Promise.resolve(response);
-      });
+    });
     },
     REFRESH_TOKEN: () => {
       return new Promise((resolve, reject) => {

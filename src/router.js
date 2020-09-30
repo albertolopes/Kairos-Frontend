@@ -6,7 +6,6 @@ import Login from './components/Auth/Login';
 import Signup from './components/Auth/Signup';
 import Forgot from './components/Auth/Forgot';
 import Todo from './components/Todo';
-import Init from './components/Init'
 import Tasks from './components/Tasks';
 import User from './components/User';
 import About from './components/About';
@@ -26,11 +25,6 @@ const router = new Router({
             path: '/tasks',
             component: Tasks,
             name: 'tasks',
-          },
-          {
-            path: '/init',
-            component: Init,
-            name: 'init'
           },
           {
             path: '/user',
@@ -59,6 +53,22 @@ const router = new Router({
       component: Forgot,
       name: 'forgot'
     },
+    {
+      path: '/github',
+      beforeEnter() {location.href = 'https://github.com/albertolopes'}
+    },
+    {
+      path: '/linkedin',
+      beforeEnter() {location.href = 'https://www.linkedin.com/in/alberto-lopes-159189126/'}
+    },
+    {
+      path: '/twitter',
+      beforeEnter() {location.href = 'https://twitter.com/albertholopes'}
+    },
+    {
+      path: '/instagram',
+      beforeEnter() {location.href = 'https://www.instagram.com/albertholopes'}
+    },
   ]
 });
 
@@ -67,8 +77,6 @@ router.beforeEach((to, from, next) => {
   const authRequired = !publicPages.includes(to.path);
   const loggedIn = localStorage.getItem('user');
 
-  // trying to access a restricted page + not logged in
-  // redirect to login page
   if (authRequired && !loggedIn) {
     next('/login');
   } else {

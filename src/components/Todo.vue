@@ -38,7 +38,7 @@
       dark
     >
     <v-app-bar-nav-icon @click.stop="drawer = !drawer">
-      <v-icon large>mdi-dots-horizontal</v-icon>
+      <v-icon large>mdi-menu</v-icon>
     </v-app-bar-nav-icon>
     <v-toolbar-title>KAIRÓS</v-toolbar-title>
       <v-spacer></v-spacer>
@@ -67,24 +67,19 @@
       drawer: null,
       items: [
         {
-          icon: 'mdi-view-dashboard',
-          title: 'Inicio', 
-          to: '/',
-        },
-        {
           title: 'Tarefas ',
           icon: 'mdi-clipboard-outline',
           to: '/tasks'
         },
+        // {
+        //   icon: 'mdi-account',
+        //   title: 'Configuração de usuario',
+        //   to: '/user',
+        // },
         {
-          icon: 'mdi-account',
-          title: 'Usuario',
-          to: '/user',
-        },
-        {
-          title: 'Notificações',
+          title: 'Sobre',
           icon: 'mdi-bell',
-          to: '/components/notifications',
+          to: '/about',
         },
       ],
     }),

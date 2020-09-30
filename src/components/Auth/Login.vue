@@ -1,8 +1,8 @@
 <template>
-  <v-container fill-height>
+  <v-container fill-height>    
     <v-layout align-center justify-center>
       <v-flex xs12 sm8 md4>
-        <v-form>
+        <v-form>            
           <v-card class="elevation-12">
             <v-snackbar
               v-model="snackbar"
@@ -22,6 +22,13 @@
             </v-snackbar>
             <v-toolbar dark color="deep-purple">
               <v-toolbar-title>Login</v-toolbar-title>
+              <v-progress-linear
+              :active="loading"
+              :indeterminate="loading"
+              absolute
+              bottom
+              color="grey"
+              ></v-progress-linear>
             </v-toolbar>
             <v-card-text>
               <v-text-field
@@ -74,6 +81,7 @@ export default {
     text: "",
     timeout: 6000,
     x: null,
+    loading: false,
     y: "top",
     rules: {
       required: value => !!value || "Required"
@@ -86,6 +94,7 @@ export default {
   },
   methods: {
     login() {
+      this.loading = true,
       this.$store
         .dispatch("LOGIN", {
           nome: this.nome,
@@ -97,6 +106,7 @@ export default {
             this.$router.go();            
           },
           error => {
+            this.loading = false;
             this.snackbar = true;
             this.text = error.response.data.message;
           }

@@ -22,6 +22,13 @@
           <v-card class="elevation-12">
             <v-toolbar dark color="deep-purple">
               <v-toolbar-title>Esqueci minha senha</v-toolbar-title>
+              <v-progress-linear
+                :active="loading"
+                :indeterminate="loading"
+                absolute
+                bottom
+                color="grey"
+              ></v-progress-linear>
             </v-toolbar>
             <v-card-text>
               <v-alert
@@ -55,25 +62,31 @@
 export default {
   name: "forgot",
   data: () => ({
-    color: "grey lighten",
+    color: "grey",
+    email: "",
     mode: "",
     snackbar: false,
     text: "",
     timeout: 6000,
     x: null,
-    y: "top"
+    y: "top",
+    loading: false,
   }),
   methods: {
     sendEmail() {
+      this.loading = true,
       this.$store
         .dispatch("FORGOT", {
           email: this.email
         })
         .then(
           () => {
-            this.$router.push("/login");
+            this.loading = false,
+            this.snackbar = true;
+            this.text = "Nova senha criada com sucesso! Verifique seu email.";
           },
           error => {
+            this.loading = false,
             this.snackbar = true;
             this.text = error.response.data.message;
           }

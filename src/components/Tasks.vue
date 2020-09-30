@@ -43,14 +43,13 @@
           <v-btn
             class="mx-2"
             fab
-            dark
             small 
             color="indigo"
             @click="salvar = true, clear()"
             v-bind="attrs"
             v-on="on"
           >
-            <v-icon dark>mdi-plus</v-icon>
+            <v-icon>mdi-plus</v-icon>
           </v-btn>
         </template>
         <v-card>
@@ -235,7 +234,7 @@
     </v-app-bar>
 
     <!-- CALENDARIO -->
-    <v-sheet height="600">
+    <v-sheet height="563">
       <v-calendar
         locale="pt-br"
         ref="calendar"
