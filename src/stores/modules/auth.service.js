@@ -50,7 +50,7 @@ export default{
     FORGOT: ({ commit },payload) => {
       commit('loginRequest', payload);
       return axios
-      .post(`auth/forgot`, payload)
+      .post(API_URL +`auth/forgot`, payload)
       .then(response => {
         return response.data;
       });
