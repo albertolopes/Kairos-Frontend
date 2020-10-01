@@ -1,6 +1,7 @@
 import axios from 'axios';
 
-const API_URL = 'https://menage-time.herokuapp.com/';
+// const API_URL = 'https://menage-time.herokuapp.com/';
+const API_URL = 'http://localhost:9000/';
 
 export default{
   mutations: {
@@ -73,7 +74,7 @@ export default{
     REFRESH_TOKEN: () => {
       return new Promise((resolve, reject) => {
         axios
-          .post(`token/refresh`)
+          .post(` token/refresh`)
           .then(response => {
             resolve(response);
           })

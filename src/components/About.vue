@@ -11,16 +11,19 @@
       <v-toolbar-title>
         Sobre
       </v-toolbar-title>
-      <v-spacer></v-spacer>
     </v-toolbar>
+
     <v-card-text>
-      Oi, eu sou o Alberto Lopes e criei esse aplicativo como um exercicio de desenvolvimento 
-      de software, o codigo fonte estará disponivel em seu perfil pessoal no github caso queira 
+      Oi, eu sou o Alberto e criei esse aplicativo como um exercicio de desenvolvimento 
+      de software, o codigo fonte estará disponivel no meu perfil pessoal do github caso queira 
       conferir.
-      A ideia era basicamente criar algo simples onde eu pudesse aplicasse algumas ferramentas como; Spring Boot,
-      Java, algum JavaScript onde o escolhido por mim foi o VueJs pela sua facilidade de aprendizagem, 
-      já que o meu foco principal era o Backand.
-      Bem, se você chegou até aqui, espero que tenha gostado! 
+      Minha ideia inicial era criar algo simples onde eu pudesse aplicar algumas ferramentas como; Spring Boot,
+      Java, algum framework JavaScript onde o escolhido por mim foi o VueJs pela sua facilidade de aprendizagem,
+      pois o meu foco principal era o backand.
+    </v-card-text>
+
+    <v-card-text>
+      Bem, se você chegou até aqui espero que tenha gostado! 
     </v-card-text>
 
     <v-card-title>
@@ -38,7 +41,6 @@
           </v-icon>
         </v-btn>
       </v-card-title>
-    <v-divider></v-divider>
   </v-card>
 </template>
 
@@ -46,46 +48,25 @@
   export default {
     data () {
       return {
-        hasSaved: false,
-        isEditing: null,
-        model: null,
-        email: "",
-        nome: "",
-        senha: "",
         social: [
-        {
-          icons: 'mdi-github',
-          to:'/github'
-        },
-        {
-          icons:'mdi-linkedin',
-          to:'/linkedin'
-        },
-        {
-          icons:'mdi-twitter',
-          to:'/twitter'
-        },
-        {
-          icons:'mdi-instagram',
-          to:'/instagram'
-        },
-      ],
+          {
+            icons: 'mdi-github',
+            to:'/github'
+          },
+          {
+            icons:'mdi-linkedin',
+            to:'/linkedin'
+          },
+          {
+            icons:'mdi-twitter',
+            to:'/twitter'
+          },
+          {
+            icons:'mdi-instagram',
+            to:'/instagram'
+          },
+        ]
       }
-    },
-
-    methods: {
-      customFilter (item, queryText) {
-        const textOne = item.name.toLowerCase()
-        const textTwo = item.abbr.toLowerCase()
-        const searchText = queryText.toLowerCase()
-
-        return textOne.indexOf(searchText) > -1 ||
-          textTwo.indexOf(searchText) > -1
-      },
-      save () {
-        this.isEditing = !this.isEditing
-        this.hasSaved = true
-      },
-    },
+    }
   }
 </script>

@@ -1,6 +1,7 @@
 import axios from 'axios';
 
-const API_URL = 'https://menage-time.herokuapp.com/';
+// const API_URL = 'https://menage-time.herokuapp.com/';
+const API_URL = 'http://localhost:9000/';
 
 let config = {
     headers: {
@@ -10,57 +11,41 @@ let config = {
 
 export default {
     mutations: {
-        
+        userRequest(state, user) {
+            state.status = { loggingIn: true };
+            state.user = user;
+        },
+        userSuccess(state, user) {
+            state.status = { loggedIn: true };
+            state.user = user;
+        },
+        userFailure(state) {
+            state.status = {};
+            state.user = null;
+        }
     },
 
     actions: {
         GET_USER: () => {
             return axios
-                .get(API_URL + 'usuario', config)
-                .then(response => {
-                    return Promise.resolve(response);
-                });
-        },
-        POST_USER: (payload) => {
-            console.log(payload);
-            return axios
-                .post(API_URL + 'usuario', {
-                    status: payload.status,
-                    tipoTarefa: payload.tipoTarefa,
-                    descricao: payload.descricao,
-                    tempoInicial: payload.tempoInicial,
-                    tempoFinal: payload.tempoFinal,
-                }, config)
-                .then(response => {
-                    return Promise.resolve(response);
-                });
+            .get(API_URL + 'usuarios', config)
+            .then(response => {
+                return Promise.resolve(response);
+            });
         },
         PUT_USER: ({ commit }, payload) => {
-            console.log(payload)
-            axios.put(API_URL + 'usuario', {
+            axios.put(API_URL + 'usuarios', {
                 id: payload.id,
-                status: payload.status,
-                tipoTarefa: payload.tipoTarefa,
-                descricao: payload.descricao,
-                tempoInicial: payload.tempoInicial,
-                tempoFinal: payload.tempoFinal,
+                nome: payload.nome,
+                email: payload.email,
+                senha: payload.senha,
             }, config)
-                .then(response => {
-                    if (response) {
-                        commit(response);
-                    }
-                    return Promise.resolve(response);
-                });
-        },
-        DELETE_USER: ({ commit }, payload) => {
-            console.log(payload.id)
-            axios.delete(API_URL + 'usuario' + payload.id, config)
-                .then(response => {
-                    if (response) {
-                        commit(response);
-                    }
-                    return Promise.resolve(response);
-                });
+            .then(response => {
+                if (response) {
+                    commit('userSuccess', response);
+                }
+                return Promise.resolve(response);
+            });
         }
     }
 

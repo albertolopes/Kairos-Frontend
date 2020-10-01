@@ -71,11 +71,11 @@
           icon: 'mdi-clipboard-outline',
           to: '/tasks'
         },
-        // {
-        //   icon: 'mdi-account',
-        //   title: 'Configuração de usuario',
-        //   to: '/user',
-        // },
+        {
+          icon: 'mdi-account',
+          title: 'Configuração de usuario',
+          to: '/user',
+        },
         {
           title: 'Sobre',
           icon: 'mdi-bell',

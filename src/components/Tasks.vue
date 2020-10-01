@@ -382,7 +382,6 @@ export default {
     }
   },
   watch: {
-
     date1() {
       this.dateFormatted = this.formatDate(this.date1);
     },
@@ -524,9 +523,9 @@ export default {
       let dateFormat =
         date.getFullYear() +
         "-" +
-        (date.getMonth() <= 9 ? "0" + (date.getMonth() + 1) : date.getMonth()) +
+        (date.getMonth() < 9 ? "0" + (date.getMonth() + 1) : date.getMonth() + 1) +
         "-" +
-        (date.getDate() <= 9 ? "0" + date.getDate() : date.getDate());
+        (date.getDate() < 9 ? "0" + date.getDate() : date.getDate());
       return dateFormat;
     },
     createHour(hour) {
