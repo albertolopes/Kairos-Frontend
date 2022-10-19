@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const API_URL = 'https://menage-time.herokuapp.com/';
+const API_URL = 'https://menager-time.herokuapp.com/';
 
 export default{
   mutations: {
